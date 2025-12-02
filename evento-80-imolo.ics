@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//80 Anni di Imolo//IT
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+DTSTART:20260117T130000
+DTEND:20260117T170000
+SUMMARY:🎂 80 Anni di Imolo
+DESCRIPTION:Festeggiamo insieme gli 80 anni di Imolo!\n\nPranzo presso il Ristorante Belvedere\nMonte Martano, Spoleto\n\nTi aspettiamo!
+LOCATION:Ristorante Belvedere, Monte Martano, Spoleto
+STATUS:CONFIRMED
+SEQUENCE:0
+END:VEVENT
+END:VCALENDAR
