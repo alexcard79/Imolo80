@@ -954,7 +954,19 @@
             font-size: 0.8rem;
             letter-spacing: 2px;
             color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .rsvp-note {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--burgundy);
             margin-bottom: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(114, 47, 55, 0.05));
+            border-radius: 10px;
+            display: inline-block;
         }
 
         .rsvp-contact {
@@ -1180,8 +1192,9 @@
     </button>
 
     <!-- Audio Element -->
-    <audio id="bgMusic" loop>
+    <audio id="bgMusic" loop preload="auto">
         <source src="music.mp3" type="audio/mpeg">
+        Il tuo browser non supporta l'audio.
     </audio>
 
     <!-- Hero Section -->
@@ -1325,6 +1338,7 @@
             <div class="rsvp-section">
                 <h3 class="rsvp-title">Conferma la tua presenza</h3>
                 <p class="rsvp-subtitle">Facci sapere se potrai essere dei nostri!</p>
+                <p class="rsvp-note">🥂 L'invito è esteso anche a fidanzati/e e compagni/e</p>
                 <div class="rsvp-contact">
                     <a href="tel:+393497711476" class="contact-item">
                         <span class="contact-icon">📞</span>
@@ -1365,20 +1379,30 @@
         const playIcon = document.getElementById('playIcon');
         const pauseIcon = document.getElementById('pauseIcon');
         let isPlaying = false;
+        let inviteOpened = false;
 
         // ============ INTRO ANIMATION ============
         const introOverlay = document.getElementById('introOverlay');
         const introContent = document.getElementById('introContent');
 
-        function openInvite() {
-            introContent.classList.add('fade-out');
+        function openInvite(e) {
+            e.preventDefault();
             
-            // Avvia la musica automaticamente
-            bgMusic.play().catch(e => console.log('Autoplay prevented:', e));
-            playIcon.style.display = 'none';
-            pauseIcon.style.display = 'block';
-            musicBtn.classList.add('playing');
-            isPlaying = true;
+            // Evita doppio trigger
+            if (inviteOpened) return;
+            inviteOpened = true;
+            
+            // Avvia la musica SUBITO al touch/click (prima di tutto il resto)
+            bgMusic.volume = 1.0;
+            bgMusic.currentTime = 0;
+            bgMusic.play().then(() => {
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+                musicBtn.classList.add('playing');
+                isPlaying = true;
+            }).catch(e => console.log('Audio error:', e));
+            
+            introContent.classList.add('fade-out');
             
             setTimeout(() => {
                 introOverlay.classList.add('open');
@@ -1389,7 +1413,9 @@
             }, 400);
         }
 
+        // Supporto sia click che touch per mobile
         introOverlay.addEventListener('click', openInvite);
+        introOverlay.addEventListener('touchend', openInvite);
 
         // ============ COUNTDOWN ============
         function updateCountdown() {
@@ -1471,20 +1497,32 @@
         }
 
         // ============ MUSIC CONTROL (evento click) ============
-        musicBtn.addEventListener('click', () => {
+        let musicToggling = false;
+        function toggleMusic(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (musicToggling) return;
+            musicToggling = true;
+            setTimeout(() => musicToggling = false, 300);
+            
             if (isPlaying) {
                 bgMusic.pause();
                 playIcon.style.display = 'block';
                 pauseIcon.style.display = 'none';
                 musicBtn.classList.remove('playing');
+                isPlaying = false;
             } else {
-                bgMusic.play().catch(e => console.log('Autoplay prevented:', e));
+                bgMusic.play().catch(e => console.log('Audio error:', e));
                 playIcon.style.display = 'none';
                 pauseIcon.style.display = 'block';
                 musicBtn.classList.add('playing');
+                isPlaying = true;
             }
-            isPlaying = !isPlaying;
-        });
+        }
+        
+        musicBtn.addEventListener('click', toggleMusic);
+        musicBtn.addEventListener('touchend', toggleMusic);
 
         // ============ SCROLL TO TOP ============
         const scrollTopBtn = document.getElementById('scrollTop');
