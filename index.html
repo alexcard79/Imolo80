@@ -385,7 +385,8 @@
         .frame {
             position: relative;
             padding: 60px 40px;
-            max-width: 750px;
+            max-width: 850px;
+            width: 95%;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.6);
             border-radius: 30px;
@@ -1074,14 +1075,19 @@
         /* ============ RESPONSIVE ============ */
         @media (max-width: 600px) {
             .frame {
-                padding: 40px 20px;
-                margin: 20px;
+                padding: 30px 15px;
+                margin: 10px;
                 border-radius: 20px;
+                max-width: 100%;
             }
 
             .frame::before, .frame::after {
-                width: 80px;
-                height: 80px;
+                width: 60px;
+                height: 60px;
+            }
+
+            .hero {
+                padding: 20px 10px;
             }
 
             .info-section {
